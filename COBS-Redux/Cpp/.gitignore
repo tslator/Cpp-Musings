@@ -1,0 +1,82 @@
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+[Bb]in/
+[Oo]bj/
+build/
+out/
+Debug/
+Release/
+x64/
+x86/
+ARM/
+ARM64/
+
+# Visual C++ intermediate and generated files
+*.obj
+*.o
+*.exe
+*.dll
+*.lib
+*.pdb
+*.idb
+*.ipch/
+*.pch
+*.tlog
+*.lastbuildstate
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+install_manifest.txt
+Testing/
+CTestTestfile.cmake
+compile_commands.json
+
+# vcpkg and package managers
+vcpkg_installed/
+vcpkg/downloads/
+vcpkg/buildtrees/
+vcpkg/installed/
+vcpkg/packages/
+.vcpkg-root
+packages/
+*.nupkg
+*.snupkg
+
+# NuGet / MSBuild
+project.lock.json
+project.fragment.lock.json
+*.user
+*.props.user
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Static analysis / tool caches
+*.clangd
+.clang-tidy
+.cquery_cached_index/
+*.cache
+
+# Logs, coverage, and test output
+*.log
+*.trace
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
