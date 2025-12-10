@@ -11,6 +11,8 @@
 #include <ranges>
 #include <iterator>
 #include <array>
+#include "test_vectors.h"
+
 
 using namespace std;
 
@@ -40,98 +42,92 @@ std::string bytes_to_hex(const std::vector<uint8_t>& bytes) {
 
 std::vector<uint8_t> encode(std::vector<uint8_t> const& input)
 {
-    std::size_t capacity = input.size() + input.size() / 254 + 2;
-    std::vector<uint8_t> packet;
-    packet.reserve(capacity);
+    std::vector<uint8_t> encoded_data;
+	encoded_data.reserve(input.size() + input.size() / 254 + 1);
 
-    // Step 1: emplace leading zero
-    packet.emplace_back(0_u8);
+	encoded_data.emplace_back(0_u8);
+    std::size_t code_index = 0;
+	auto code = 1_u8;
 
-    // Step 2: copy input into packet
-    std::copy(input.begin(), input.end(), std::back_inserter(packet));
+    for (std::size_t ii = 0; ii < input.size(); ++ii) {
+        auto value = input[ii];
 
-    // Step 3: emplace trailing zero
-    packet.emplace_back(0_u8);
+        if (value != 0_u8) {
+            encoded_data.emplace_back(value);
+			code += 1_u8;
 
-    // Step 4: patch each zero with offset to next zero
-    auto it = packet.begin();
-    while (it != packet.end()) {
-        auto next = std::find_if(
-            std::next(it),
-            packet.end(),
-            [](uint8_t x) { return x == 0_u8; });
-        if (next == packet.end()) {
-            break; // trailing zero remains unchanged
+            // Check if block is full
+            if (code == 255_u8) {
+                encoded_data[code_index] = 255_u8;
+
+                if (ii + 1 < input.size()) {
+                    code_index = encoded_data.size();
+                    encoded_data.emplace_back(0_u8);
+                    code = 1_u8;
+                }
+            }
         }
-
-        *it = static_cast<uint8_t>(std::distance(it, next));
-        it = next;
+        else {
+            // zero encountered: finish block
+			encoded_data[code_index] = code;
+            code_index = encoded_data.size();
+			encoded_data.emplace_back(0_u8);
+			code = 1_u8;
+        }
     }
 
-    return packet;
+	encoded_data[code_index] = code;
+
+    return encoded_data;
 }
 
-std::vector<uint8_t> decode(std::vector<uint8_t> packet)
+std::vector<uint8_t> decode(std::vector<uint8_t> encoded_data)
 {
-    std::vector<uint8_t> output;
+    std::vector<uint8_t> decoded_data;
+	decoded_data.reserve(encoded_data.size());
+    std::size_t index{ 0 };
 
-    // Given:
-    //  01 01 00
-    // Produce:
-    //  00
+    while (index < encoded_data.size()) {
 
-    auto it = packet.begin();
-    while (it != packet.end()) {
-        uint8_t offset = *it;
-        auto next = std::ranges::next(it, offset, packet.end());
+        auto code = encoded_data[index];
+		index += 1;
 
-        if (next == packet.end()) {
-            break; // reached trailing zero
+        for (size_t n = 1; n < code; ++n) {
+            if (index >= encoded_data.size()) {
+                return {};
+            }
+            decoded_data.emplace_back(encoded_data[index]);
+			index += 1;
 		}
 
-        // Copy the range between markers
-        auto slice = std::ranges::subrange(std::next(it), next);
-        std::ranges::copy(slice, std::back_inserter(output));
-
-        it = next;
+        if (code < 255_u8 && index < encoded_data.size()) {
+            decoded_data.emplace_back(0_u8);
+        }
     }
 
-    return output;
+    return decoded_data;
 }
 
 
-void run_test(const std::string& input_hex, const std::string& expected_packet_hex) {
-
-    auto input = hex_to_bytes(input_hex);
-    auto expected_packet = hex_to_bytes(expected_packet_hex);
-
-    auto encoded = encode(input);
-    auto decoded = decode(expected_packet);
-
-    bool encode_ok = (encoded == expected_packet);
-    bool decode_ok = (decoded == input);
-
-    std::cout << "Test: input=" << input_hex << "\n";
-    std::cout << "Expected packet: " << expected_packet_hex << "\n";
-    std::cout << "Encoded packet : " << bytes_to_hex(encoded) << "\n";
-    std::cout << "Decoded input  : " << bytes_to_hex(decoded) << "\n";
-    std::cout << "Encode match: " << (encode_ok ? "✅" : "❌") << "\n";
-    std::cout << "Decode match: " << (decode_ok ? "✅" : "❌") << "\n\n";
-}
 
 int main()
 {
-    std::vector<std::pair<std::string, std::string>> tests = {
-            {"00", "0101"},
-            //{"0000", "01010100"},
-            //{"001100", "0102110100"},
-            //{"11220033", "031122023300"},
-            //{"11223344", "051122334400"},
-            //{"11000000", "021101010100"},
-            // Add more test cases here...
-    };
+    for (const auto& [input_hex, packet_hex] : TEST_VECTORS) {
+        auto input = hex_to_bytes(input_hex);
+        auto expected_packet = hex_to_bytes(packet_hex);
 
-    for (const auto& [input_hex, packet_hex] : tests) {
-        run_test(input_hex, packet_hex);
+        auto encoded = encode(input);
+        auto decoded = decode(expected_packet);
+
+        bool encode_ok = (encoded == expected_packet);
+        bool decode_ok = (decoded == input);
+
+        std::cout << "Test: input=" << input_hex << "\n";
+        std::cout << "Expected packet: " << packet_hex << "\n";
+        std::cout << "Encoded packet : " << bytes_to_hex(encoded) << "\n";
+        std::cout << "Decoded input  : " << bytes_to_hex(decoded) << "\n";
+        std::cout << std::boolalpha;
+        std::cout << "Encode match: " << encode_ok << "\n";
+        std::cout << "Decode match: " << decode_ok << "\n\n";
     }
 }
