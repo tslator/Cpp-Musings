@@ -1,0 +1,121 @@
+# .gitignore for C++ projects using CMake, Ninja, MSVC/Visual Studio, CLion, VS Code
+
+# ------------------------------------------------------------------
+# Build directories and common output folders
+# ------------------------------------------------------------------
+/build/
+/build-*/
+/cmake-build-*/
+/out/
+/bin/
+/lib/
+/lib64/
+/target/
+/dist/
+
+# ------------------------------------------------------------------
+# CMake generated files
+# ------------------------------------------------------------------
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+CTestTestfile.cmake
+Testing/
+install_manifest.txt
+Makefile
+cmake-build-debug/
+
+# ------------------------------------------------------------------
+# Ninja build files
+# ------------------------------------------------------------------
+build.ninja
+.ninja_deps
+.ninja_log
+.ninja_status
+
+# ------------------------------------------------------------------
+# Visual Studio (and MSVC) files
+# ------------------------------------------------------------------
+.vs/
+*.vcxproj.user
+*.vcxproj.filters.user
+*.suo
+*.user
+*.userosscache
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+ipch/
+*.pdb
+*.obj
+*.ilk
+*.opensdf
+
+# MSBuild incremental build data / logs
+*.tlog/
+*.lastbuildstate
+
+# ------------------------------------------------------------------
+# Compiled objects, libraries, executables
+# ------------------------------------------------------------------
+*.o
+*.obj
+*.lo
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Temporary debug symbol bundles (macOS)
+*.dSYM/
+
+# ------------------------------------------------------------------
+# Coverage, profiling and sanitizer outputs
+# ------------------------------------------------------------------
+coverage/
+*.gcno
+*.gcda
+*.gcov
+*.prof
+*.profraw
+*.sancov
+
+# ------------------------------------------------------------------
+# IDE/editor folders and files
+# ------------------------------------------------------------------
+.vscode/
+.idea/
+*.iml
+
+# Vim swap files, editor temp files
+*~
+*.swp
+*.swo
+
+# ------------------------------------------------------------------
+# OS generated files
+# ------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# ------------------------------------------------------------------
+# Logs, temp and miscellaneous
+# ------------------------------------------------------------------
+*.log
+*.tmp
+*.temp
+*.cache
+
+# ------------------------------------------------------------------
+# Package manager / third-party directories (optional)
+# ------------------------------------------------------------------
+vcpkg_installed/
+.vcpkg/
+ThirdParty/
+external/
+
+# End of .gitignore
