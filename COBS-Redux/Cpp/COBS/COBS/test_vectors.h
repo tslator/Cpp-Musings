@@ -1,18 +1,8 @@
+#pragma once
+
 #include <vector>
 #include <string>
-
-auto create_hex_range = [](int start, int stop) {
-    std::string out;
-    out.reserve((stop - start) * 2);   // avoid reallocations
-
-    for (int b = start; b < stop; ++b) {
-        char buf[3];
-        std::snprintf(buf, sizeof(buf), "%02x", static_cast<unsigned>(b) & 0xFF);
-        out.append(buf);
-    }
-
-    return out;
-    };
+#include "utils.h"
 
 std::vector<std::pair<std::string, std::string>> const TEST_VECTORS = {
         {"00", "0101"},

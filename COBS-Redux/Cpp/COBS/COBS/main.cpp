@@ -112,22 +112,20 @@ std::vector<uint8_t> decode(std::vector<uint8_t> encoded_data)
 
 int main()
 {
-    for (const auto& [input_hex, packet_hex] : TEST_VECTORS) {
-        auto input = hex_to_bytes(input_hex);
-        auto expected_packet = hex_to_bytes(packet_hex);
+    for (const auto& [input, expected] : TEST_VECTORS) {
+		auto input_as_bytes = hex_to_bytes(input);
+        auto expected_as_bytes = hex_to_bytes(expected);
 
-        auto encoded = encode(input);
-        auto decoded = decode(expected_packet);
+        auto encoded = encode(input_as_bytes);
+        auto decoded = decode(expected_as_bytes);
 
-        bool encode_ok = (encoded == expected_packet);
-        bool decode_ok = (decoded == input);
-
-        std::cout << "Test: input=" << input_hex << "\n";
-        std::cout << "Expected packet: " << packet_hex << "\n";
-        std::cout << "Encoded packet : " << bytes_to_hex(encoded) << "\n";
-        std::cout << "Decoded input  : " << bytes_to_hex(decoded) << "\n";
+//		std::cout("Test Case" << test_case + 1 << ":\n");
+        std::cout << "Input: " << print_range(input_as_bytes) << "\n";
+        std::cout << "Encoded: " << print_range(encoded) << "\n";
+        std::cout << "Expected: " << print_range(expected_as_bytes) << "\n";
+		auto matched = encoded == expected_as_bytes;
         std::cout << std::boolalpha;
-        std::cout << "Encode match: " << encode_ok << "\n";
-        std::cout << "Decode match: " << decode_ok << "\n\n";
+        std::cout << "Match: " << matched << "\n";
+        std::cout << "\n";
     }
 }

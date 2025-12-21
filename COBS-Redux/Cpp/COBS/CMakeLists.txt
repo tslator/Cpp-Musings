@@ -10,6 +10,10 @@ if (POLICY CMP0141)
 endif()
 
 project ("COBS")
+set(CMAKE_GENERATOR_PLATFORM x64)
+set(VCPKG_VISUAL_STUDIO_PATH "C:/Program Files/Microsoft Visual Studio/18/Insiders")
+set(VCPKG_PLATFORM_TOOLSET "v143")
+set(CMAKE_TOOLCHAIN_FILE "C:/Program Files/Microsoft Visual Studio/18/Insiders/VC/vcpkg/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 
 # Include sub-projects.
 add_subdirectory ("COBS")
