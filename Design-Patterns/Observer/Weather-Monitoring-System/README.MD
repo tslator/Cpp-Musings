@@ -14,3 +14,10 @@ The system must be extensible: you should be able to add or remove displays at r
 - **Ownership & Lifetime**: Consider how the sensor knows if a display still exists. Use smart pointers (std::shared_ptr / std::weak_ptr) or a registration ID system to prevent "dangling observers."
 - **Efficiency**: Use std::string_view or pass-by-reference where appropriate to avoid unnecessary copies during notification.
 - **Thread Safety (Optional but encouraged)**: Think about what happens if a display is added while a notification is in progress (though a single-threaded solution is fine for the core pattern).
+
+
+## Areas for Improvement
+- attach accepts raw pointers and relies on the uniqueness of an objects address
+- does not address the lifetime of the observer.  if the observer is deleted before it is detached, a dangling pointer results
+- replace address dependency with a unique id like GUID
+- resolve lifetime?  shared pointer?
