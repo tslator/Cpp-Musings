@@ -21,3 +21,5 @@ The system must be extensible: you should be able to add or remove displays at r
 - does not address the lifetime of the observer.  if the observer is deleted before it is detached, a dangling pointer results
 - replace address dependency with a unique id like GUID
 - resolve lifetime?  shared pointer?
+  - adds a subscription, replacing attach/detach with subscribe/unsubscribe
+  - adds mutex to safeguard subscribe/unsubscribe
